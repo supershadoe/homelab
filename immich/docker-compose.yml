@@ -71,9 +71,13 @@ services:
     container_name: immich_cloudflared
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
-    command: tunnel --no-autoupdate run
+    command: tunnel run
     env_file:
       - .env
+    environment:
+      TUNNEL_METRICS: '127.0.0.1:61616'
+    healthcheck:
+      test: ["CMD", "cloudflared", "tunnel", "--metrics", "localhost:61616", "ready"]
     depends_on:
       - immich-server
       - immich-machine-learning
