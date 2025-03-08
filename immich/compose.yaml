@@ -78,11 +78,13 @@ services:
       TUNNEL_METRICS: '127.0.0.1:61616'
     healthcheck:
       test: ["CMD", "cloudflared", "tunnel", "--metrics", "localhost:61616", "ready"]
+      timeout: 3s
+      start_period: 30s
+      start_interval: 3s
+      retries: 3
     depends_on:
       - immich-server
       - immich-machine-learning
-      - redis
-      - database
 
 volumes:
   model-cache:
