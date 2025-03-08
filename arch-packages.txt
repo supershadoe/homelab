@@ -1,3 +1,4 @@
+arch-install-scripts
 base
 base-devel
 bat
@@ -29,6 +30,7 @@ paru-bin-debug
 polkit
 rclone
 smartmontools
+snapper
 starship
 tailscale
 tmux
