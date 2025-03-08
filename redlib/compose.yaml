@@ -3,6 +3,8 @@ services:
     image: quay.io/redlib/redlib:latest
     restart: unless-stopped
     container_name: redlib
+    ports:
+      - 127.0.0.1:8080:8080
     user: nobody
     read_only: true
     security_opt:
@@ -14,6 +16,9 @@ services:
       test: ["CMD", "wget", "--spider", "-q", "--tries=1", "http://localhost:8080/settings"]
       interval: 5m
       timeout: 3s
+      start_period: 2m
+      start_interval: 10s
+      retries: 3
 
   cloudflared:
     container_name: redlib_cloudflared
@@ -26,5 +31,9 @@ services:
       TUNNEL_METRICS: '127.0.0.1:61616'
     healthcheck:
       test: ["CMD", "cloudflared", "tunnel", "--metrics", "localhost:61616", "ready"]
+      timeout: 3s
+      start_period: 30s
+      start_interval: 3s
+      retries: 3
     depends_on:
       - redlib
