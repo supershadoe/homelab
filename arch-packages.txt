@@ -31,6 +31,7 @@ polkit
 python
 python-requests
 rclone
+reflector
 smartmontools
 snapper
 starship
