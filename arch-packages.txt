@@ -28,6 +28,8 @@ pacman-contrib
 paru-bin
 paru-bin-debug
 polkit
+python
+python-requests
 rclone
 smartmontools
 snapper
