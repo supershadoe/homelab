@@ -5,7 +5,7 @@ services:
     devices:
       - /dev/dri:/dev/dri
     volumes:
-      - ${UPLOAD_LOCATION}:/usr/src/app/upload
+      - ${UPLOAD_LOCATION}:/data
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - .env
