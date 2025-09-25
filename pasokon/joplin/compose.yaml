@@ -1,0 +1,63 @@
+services:
+  db:
+    image: postgres:16
+    volumes:
+      - ${JOPLIN_DB_DIR}:/var/lib/postgresql/data
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${JOPLIN_DB_PORT}:5432"
+    environment:
+      POSTGRES_USER: ${JOPLIN_DB_USER}
+      POSTGRES_PASSWORD: ${JOPLIN_DB_PWD}
+      POSTGRES_DATABASE: ${JOPLIN_DB_NAME}
+  app:
+    image: joplin/server:latest
+    depends_on:
+      - db
+      - transcribe
+    ports:
+      - "${JOPLIN_PORT}:22300"
+    restart: unless-stopped
+    environment:
+      DB_CLIENT: pg
+      POSTGRES_HOST: db
+      APP_PORT: ${JOPLIN_PORT}
+      APP_BASE_URL: ${JOPLIN_BASE_URL}
+      POSTGRES_USER: ${JOPLIN_DB_USER}
+      POSTGRES_PASSWORD: ${JOPLIN_DB_PWD}
+      POSTGRES_DATABASE: ${JOPLIN_DB_NAME}
+      POSTGRES_PORT: ${JOPLIN_DB_PORT}
+      TRANSCRIBE_API_KEY: ${TRANSCRIBE_API_KEY}
+      TRANSCRIBE_BASE_URL: http://transcribe:${TRANSCRIBE_PORT}
+      TRANSCRIBE_ENABLED: true
+  transcribe-db:
+    image: postgres:16
+    volumes:
+      - ${TRANSCRIBE_DB_DIR}:/var/lib/postgresql/data
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${TRANSCRIBE_DB_PORT}:5432"
+    environment:
+      POSTGRES_USER: ${TRANSCRIBE_DB_USER}
+      POSTGRES_PASSWORD: ${TRANSCRIBE_DB_PWD}
+      POSTGRES_DATABASE: ${TRANSCRIBE_DB_NAME}
+  transcribe:
+    image: joplin/transcribe:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${HTR_CLI_IMAGES_FOLDER}:/app/packages/transcribe/images
+    depends_on:
+      - transcribe-db
+    ports:
+      - "${TRANSCRIBE_PORT}:4567"
+    restart: unless-stopped
+    environment:
+      DB_CLIENT: pg
+      QUEUE_DATABASE_HOST: transcribe-db
+      APP_PORT: ${TRANSCRIBE_PORT}
+      API_KEY: ${TRANSCRIBE_API_KEY}
+      HTR_CLI_IMAGES_FOLDER: ${HTR_CLI_IMAGES_FOLDER}
+      QUEUE_DATABASE_USER: ${TRANSCRIBE_DB_USER}
+      QUEUE_DATABASE_PASSWORD: ${TRANSCRIBE_DB_PWD}
+      QUEUE_DATABASE_NAME: ${TRANSCRIBE_DB_NAME}
+      QUEUE_DATABASE_PORT: ${TRANSCRIBE_DB_PORT}
