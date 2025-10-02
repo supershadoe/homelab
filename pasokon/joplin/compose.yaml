@@ -5,7 +5,9 @@ services:
       - ${JOPLIN_DB_DIR}:/var/lib/postgresql/data
     restart: unless-stopped
     ports:
-      - "127.0.0.1:${JOPLIN_DB_PORT}:5432"
+      - "${JOPLIN_DB_PORT}"
+    networks:
+      - app-network
     environment:
       POSTGRES_USER: ${JOPLIN_DB_USER}
       POSTGRES_PASSWORD: ${JOPLIN_DB_PWD}
@@ -17,6 +19,10 @@ services:
       - transcribe
     ports:
       - "${JOPLIN_PORT}:22300"
+    networks:
+      - app-network
+      - shared-network
+      - external
     restart: unless-stopped
     environment:
       DB_CLIENT: pg
@@ -36,11 +42,14 @@ services:
       - ${TRANSCRIBE_DB_DIR}:/var/lib/postgresql/data
     restart: unless-stopped
     ports:
-      - "127.0.0.1:${TRANSCRIBE_DB_PORT}:5432"
+      - "${TRANSCRIBE_DB_PORT}"
+    networks:
+      - transcribe-network
     environment:
       POSTGRES_USER: ${TRANSCRIBE_DB_USER}
       POSTGRES_PASSWORD: ${TRANSCRIBE_DB_PWD}
       POSTGRES_DATABASE: ${TRANSCRIBE_DB_NAME}
+    command: -p ${TRANSCRIBE_DB_PORT}
   transcribe:
     image: joplin/transcribe:latest
     volumes:
@@ -49,7 +58,10 @@ services:
     depends_on:
       - transcribe-db
     ports:
-      - "${TRANSCRIBE_PORT}:4567"
+      - "${TRANSCRIBE_PORT}"
+    networks:
+      - transcribe-network
+      - shared-network
     restart: unless-stopped
     environment:
       DB_CLIENT: pg
@@ -61,3 +73,12 @@ services:
       QUEUE_DATABASE_PASSWORD: ${TRANSCRIBE_DB_PWD}
       QUEUE_DATABASE_NAME: ${TRANSCRIBE_DB_NAME}
       QUEUE_DATABASE_PORT: ${TRANSCRIBE_DB_PORT}
+
+networks:
+  app-network:
+    internal: true
+  transcribe-network:
+    internal: true
+  shared-network:
+    internal: true
+  external:
