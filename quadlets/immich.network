@@ -1,0 +1,5 @@
+[Unit]
+Description=Internal network for Immich services
+
+[Network]
+Driver=bridge

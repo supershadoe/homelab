@@ -1,0 +1,12 @@
+[Container]
+ContainerName=immich-postgres
+EnvironmentFile=.env
+Environment=POSTGRES_INITDB_ARGS=--data-checksums
+Image=ghcr.io/immich-app/postgres:14-vectorchord0.4.3
+ShmSize=128mb
+Volume=/home/supershadoe/postgres:/var/lib/postgresql/data
+Network=immich.network
+PublishPort=5432
+
+[Service]
+Restart=always

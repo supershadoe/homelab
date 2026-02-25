@@ -1,0 +1,5 @@
+[Unit]
+Description=Bridge to connect all apps to caddy
+
+[Network]
+Driver=bridge

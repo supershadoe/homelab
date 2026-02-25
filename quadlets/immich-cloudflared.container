@@ -1,0 +1,18 @@
+[Unit]
+Requires=immich-server.service immich-machine-learning.service
+After=immich-server.service immich-machine-learning.service
+
+[Container]
+ContainerName=immich_cloudflared
+Environment=TUNNEL_METRICS=127.0.0.1:61616
+EnvironmentFile=.env
+Exec=tunnel run
+HealthCmd=["cloudflared","tunnel","--metrics","localhost:61616","ready"]
+HealthRetries=3
+HealthStartPeriod=30s
+HealthStartupInterval=3s
+HealthTimeout=3s
+Image=docker.io/cloudflare/cloudflared:latest
+
+[Service]
+Restart=always

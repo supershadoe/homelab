@@ -1,0 +1,15 @@
+[Container]
+ContainerName=caddy
+Image=docker.io/caddy:latest
+PublishPort=5000:5000
+AddCapability=NET_ADMIN
+Volume=/home/supershadoe/caddy_data/etc/caddy:/etc/caddy
+Volume=/home/supershadoe/caddy_data/data:/data
+Volume=/home/supershadoe/caddy_data/config:/config
+Network=caddy.network
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

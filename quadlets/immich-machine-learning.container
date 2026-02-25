@@ -1,0 +1,15 @@
+[Container]
+ContainerName=immich-machine-learning
+EnvironmentFile=.env
+Image=ghcr.io/immich-app/immich-machine-learning:v2-cuda
+Volume=model-cache:/cache
+Network=immich.network
+PublishPort=3003
+AddDevice=nvidia.com/gpu=all
+Environment=NVIDIA_VISIBLE_DEVICES=all
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

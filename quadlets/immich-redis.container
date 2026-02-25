@@ -1,0 +1,9 @@
+[Container]
+ContainerName=immich-redis
+HealthCmd=redis-cli ping || exit 1
+Image=docker.io/valkey/valkey:9-trixie
+Network=immich.network
+PublishPort=6379
+
+[Service]
+Restart=always

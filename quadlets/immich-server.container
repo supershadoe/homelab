@@ -1,0 +1,19 @@
+[Unit]
+Requires=immich-redis.service immich-postgres.service
+After=immich-redis.service immich-postgres.service
+
+[Container]
+ContainerName=immich-server
+EnvironmentFile=.env
+Image=ghcr.io/immich-app/immich-server:v2
+PublishPort=2283:2283
+Volume=/mnt/c/Users/supershadoe/Programs/homelab/immich_data/library:/data
+Volume=/etc/localtime:/etc/localtime:ro
+Network=immich.network
+Network=caddy.network
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

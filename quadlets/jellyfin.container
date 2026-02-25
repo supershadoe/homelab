@@ -1,0 +1,16 @@
+[Container]
+ContainerName=jellyfin
+EnvironmentFile=.env
+Image=ghcr.io/jellyfin/jellyfin:latest
+PublishPort=8096:8096
+Volume=jellyfin-cache:/cache
+Volume=/home/supershadoe/jellyfin_data/config:/config
+Volume=/home/supershadoe/jellyfin_data/media:/media
+Volume=/mnt/serv-sto:/mnt/serv-sto	
+Network=caddy.network
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
